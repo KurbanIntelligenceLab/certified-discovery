@@ -176,8 +176,7 @@ Computational Science on publication (preprint on arXiv).
 ## Citing
 
 Please cite the paper and the software (see [`CITATION.cff`](CITATION.cff)). A
-`BibTeX` entry will be added on publication; the archived release will carry a
-Zenodo DOI.
+`BibTeX` entry will be added on publication.
 
 ## License
 
