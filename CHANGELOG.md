@@ -16,5 +16,5 @@ All notable changes to this project are documented here. The format is based on
   number in the paper (28 checks).
 - `figures/build_figures.py` — regenerates Figures 2 and 3 (vector PDF + 600 dpi PNG).
 - `figures/make_assets.py` — regenerates the README visuals (hero, method diagram, headline figure).
-- `data/` — per-figure and per-table source data with an SHA-256 manifest.
+- `results/` — per-figure and per-table source data with an SHA-256 manifest.
 - Full test suite, CI, and API/methods documentation.

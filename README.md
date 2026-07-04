@@ -149,8 +149,8 @@ requirement; coverage holds across all 90 configurations:
 
 The run of record: notebook build `2026-07-03-optionB-colfix-r6`, `N_REP = 1000`,
 `N_LABEL = 500`, base seed `0`, τ ∈ {0, 0.05, 0.10} eV/atom, full and
-unique-prototype pools; every file in [`data/`](data/) carries an SHA-256 checksum
-in [`data/run_metadata.json`](data/run_metadata.json).
+unique-prototype pools; every file in [`results/`](results/) carries an SHA-256 checksum
+in [`results/run_metadata.json`](results/run_metadata.json).
 
 ## Repository layout
 
@@ -162,10 +162,10 @@ certified-discovery/
 ├── scripts/
 │   └── verify_results.py #   independent re-derivation of every headline number (28/28)
 ├── figures/
-│   ├── build_figures.py  #   regenerates the paper figures (Figs 2-3) from data/
+│   ├── build_figures.py  #   regenerates the paper figures (Figs 2-3) from results/
 │   └── make_assets.py    #   regenerates the README visuals (hero, method, headline)
 ├── notebooks/analysis.ipynb   # the full study, end to end
-├── data/                 # per-figure / per-table source data + SHA-256 manifest
+├── results/              # per-figure / per-table source data + SHA-256 manifest
 ├── tests/                # unit tests + smoke test (pytest)
 └── docs/                 # API reference, methods notes, and figure assets
 ```
@@ -179,7 +179,7 @@ paper and the software (see [`CITATION.cff`](CITATION.cff)).
 
 ## License
 
-Code under the [MIT License](LICENSE); the data files in `data/` under
+Code under the [MIT License](LICENSE); the data files in `results/` under
 [CC BY 4.0](LICENSE-DATA). The underlying WBM corpus and Matbench Discovery
 prediction files remain the property of their respective authors; please cite them
 when using this data.

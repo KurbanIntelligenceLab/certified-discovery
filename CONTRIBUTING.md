@@ -12,7 +12,7 @@ statistically correct and match the published method.
 - **Tests must pass.** `pytest` runs coverage, bias, budget-monotonicity, and
   antisymmetry checks. New estimator behaviour needs a corresponding test.
 - **Numbers must reconcile.** `python scripts/verify_results.py` must stay green;
-  it re-derives every headline number in the paper from `data/`.
+  it re-derives every headline number in the paper from `results/`.
 
 ## Development setup
 

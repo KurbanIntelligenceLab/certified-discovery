@@ -1,6 +1,6 @@
 # figures/
 
-Scripts that regenerate every visual in the project from the data in `../data/`.
+Scripts that regenerate every visual in the project from the data in `../results/`.
 Run them from the repository root.
 
 - **`build_figures.py`** — regenerates the paper figures (Figure 2, the synthetic
@@ -19,6 +19,6 @@ Run them from the repository root.
   python figures/make_assets.py
   ```
 
-Both read the released result files in `../data/`; nothing here downloads data or
+Both read the released result files in `../results/`; nothing here downloads data or
 recomputes results. To regenerate the underlying numbers, run
 `notebooks/analysis.ipynb`.

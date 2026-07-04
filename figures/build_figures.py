@@ -19,7 +19,7 @@ from matplotlib.patches import Patch
 from matplotlib.ticker import FixedLocator, FixedFormatter
 
 DPI = 600  # PNG raster resolution; PDF is vector regardless
-RES = "data"
+RES = "results"
 _args = sys.argv[1:]
 _skip = False
 for _i, a in enumerate(_args):

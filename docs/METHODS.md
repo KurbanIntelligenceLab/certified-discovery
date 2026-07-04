@@ -74,8 +74,8 @@ classical one (equality only when predictions carry no signal).
 ## Reproducibility
 
 `scripts/verify_results.py` recomputes every headline number in the manuscript
-from the released `data/` CSVs and asserts agreement (28 checks). The full run of
+from the released `results/` CSVs and asserts agreement (28 checks). The full run of
 record: notebook build `2026-07-03-optionB-colfix-r6`, `N_REP = 1000` Monte Carlo
 replicates, `N_LABEL = 500`, base seed `0`, thresholds `τ ∈ {0, 0.05, 0.10}`
 eV/atom, full and unique-prototype pools, 15 models. Every file carries an SHA-256
-checksum in `data/run_metadata.json`.
+checksum in `results/run_metadata.json`.

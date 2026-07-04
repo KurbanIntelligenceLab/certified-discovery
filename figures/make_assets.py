@@ -3,7 +3,7 @@
 headline overstatement figure.
 
 Outputs are written to docs/assets/. The overstatement figure reads the released
-result files in data/; the hero and method diagram are self-contained. Run from
+result files in results/; the hero and method diagram are self-contained. Run from
 the repository root:
 
     python figures/make_assets.py
@@ -19,7 +19,7 @@ from matplotlib.patches import Circle, FancyBboxPatch
 from matplotlib.lines import Line2D
 
 ASSETS = "docs/assets"
-DATA = "data"
+DATA = "results"
 os.makedirs(ASSETS, exist_ok=True)
 
 # Shared palette (Okabe-Ito derived), used across every asset.
@@ -126,7 +126,7 @@ def build_method(path=f"{ASSETS}/method.png"):
 
 
 def build_overstatement(path=f"{ASSETS}/overstatement.png"):
-    """Headline: overstatement versus model accuracy, from data/."""
+    """Headline: overstatement versus model accuracy, from results/."""
     t1 = pd.read_csv(f"{DATA}/table1_raw.csv")
     mae = pd.read_csv(f"{DATA}/model_mae.csv").set_index("model")
     f0 = t1[(t1.pool == "full") & (t1.tau == 0.0)].set_index("model")

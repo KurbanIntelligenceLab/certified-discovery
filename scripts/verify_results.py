@@ -33,7 +33,7 @@ def check(name, ok, detail=""):
         FAILURES.append(name)
 
 
-def main(results_dir="data"):
+def main(results_dir="results"):
     t1 = pd.read_csv(f"{results_dir}/table1_raw.csv")
     t2 = pd.read_csv(f"{results_dir}/table2_raw.csv")
     s2 = pd.read_csv(f"{results_dir}/tableS2_raw.csv")
@@ -198,4 +198,4 @@ def main(results_dir="data"):
           t1hw.max() <= 4.5, f"max={t1hw.max():.2f}")
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "data")
+    main(sys.argv[1] if len(sys.argv) > 1 else "results")
