@@ -14,6 +14,7 @@ All notable changes to this project are documented here. The format is based on
   coverage and budget-curve harnesses.
 - `scripts/verify_results.py` — independent re-derivation of every headline
   number in the paper (28 checks).
-- `scripts/build_figures.py` — regenerates Figures 2 and 3 (vector PDF + 600 dpi PNG).
+- `figures/build_figures.py` — regenerates Figures 2 and 3 (vector PDF + 600 dpi PNG).
+- `figures/make_assets.py` — regenerates the README visuals (hero, method diagram, headline figure).
 - `data/` — per-figure and per-table source data with an SHA-256 manifest.
 - Full test suite, CI, and API/methods documentation.

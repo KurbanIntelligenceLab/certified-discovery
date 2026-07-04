@@ -122,7 +122,7 @@ script, and every figure regenerates from the same data:
 
 ```bash
 python scripts/verify_results.py        # reconciles all headline numbers -> 28/28 PASS
-python scripts/build_figures.py         # regenerates the paper figures (vector PDF + 600 dpi PNG)
+python figures/build_figures.py         # regenerates the paper figures (vector PDF + 600 dpi PNG)
 ```
 
 <details>
@@ -160,8 +160,10 @@ certified-discovery/
 │   ├── __init__.py       #   public API
 │   └── core.py           #   PPI/PPI++, counts, paired diffs, budget rule, stratified PPI
 ├── scripts/
-│   ├── verify_results.py #   independent re-derivation of every headline number (28/28)
-│   └── build_figures.py  #   regenerates the figures from data/
+│   └── verify_results.py #   independent re-derivation of every headline number (28/28)
+├── figures/
+│   ├── build_figures.py  #   regenerates the paper figures (Figs 2-3) from data/
+│   └── make_assets.py    #   regenerates the README visuals (hero, method, headline)
 ├── notebooks/analysis.ipynb   # the full study, end to end
 ├── data/                 # per-figure / per-table source data + SHA-256 manifest
 ├── tests/                # unit tests + smoke test (pytest)
@@ -174,7 +176,8 @@ Computational Science on publication (preprint on arXiv).
 ## Citing
 
 Please cite the paper and the software (see [`CITATION.cff`](CITATION.cff)). A
-`BibTeX` entry will be added on publication.
+`BibTeX` entry will be added on publication; the archived release will carry a
+Zenodo DOI.
 
 ## License
 
