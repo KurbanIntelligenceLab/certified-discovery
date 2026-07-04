@@ -58,7 +58,6 @@
     "table1_raw.csv": "31e441d467e9f2d14dc5cd99dca017ba436ac9e0b633d401a6e3fcb88f4aba62",
     "table2_raw.csv": "bc908f2177bb4897f6ce3027f42451a2a59c336f49b3967f8494460e0eaf39cf",
     "tableS2_raw.csv": "7e9bf07941ba137ca6efddc1ef5e41e9d6ac933cdac944ba3f5cafa9f32c78bd",
-    "fig2_synthetic_validation.png": "25da5359151f7d1046b5b5836e3ade7cfc68ead1bb8e65d18a1dc3ad02fe483d",
     "fig2_synthetic_summary.csv": "6428c4797ceb09a747dca0f4d37a9023ac7bdbb1079322059a9596d511bc4066",
     "fig2_budget_curve_synthetic.csv": "3cb19bb56c70cd6a2dd3880f6d22f7eba48dd499bbcc807bfef182241a8eedf0",
     "table2_budget_sensitivity.csv": "0f5a8d7c361e5bf3ccf380f8fa6aade3c5ce18c7dccb1992ff7a04a4393776a5",
@@ -66,7 +65,6 @@
     "budget_curves.csv": "867d4f5c9f65d79b2182481bb6f7614d26390b53c220ff592b22fbb9b9c170fc",
     "budgets_summary.csv": "027d359b058e1724c8216fcede5865c19dbe441354992e6b54cfe8ff642970c6",
     "model_mae.csv": "0debc0fb4340fc8b56670c48f67be2c64b2db37298af31f650a9b71e944eb015",
-    "e5_robustness.csv": "c770d832746899f1849bca79a3bc921f92a5d0e23660a3cb532ee695370f752a",
-    "fig3_budget_real.png": "f8e8d38689d3cb9535ba8aeb4bc092bcccd735f1674e3e69afd924a4dfc9a8f7"
+    "e5_robustness.csv": "c770d832746899f1849bca79a3bc921f92a5d0e23660a3cb532ee695370f752a"
   }
 }

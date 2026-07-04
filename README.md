@@ -170,11 +170,12 @@ certified-discovery/
 └── docs/                 # API reference, methods notes, and figure assets
 ```
 
+The manuscript itself is not distributed in this repository.
 
 ## Citing
 
-Please cite the paper and the software (see [`CITATION.cff`](CITATION.cff)). A
-`BibTeX` entry will be added on publication.
+If you use this software or the certified-discovery protocol, please cite the
+paper and the software (see [`CITATION.cff`](CITATION.cff)).
 
 ## License
 
