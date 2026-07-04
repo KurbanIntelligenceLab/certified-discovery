@@ -1,21 +1,25 @@
 <div align="center">
 
-# Certified Discovery
+<img src="docs/assets/hero.png" alt="Certified Discovery" width="100%"/>
 
-**Statistically valid materials screening claims from a small DFT verification budget**
+<br/>
 
 [![CI](https://github.com/hasankurban/certified-discovery/actions/workflows/verify.yml/badge.svg)](https://github.com/hasankurban/certified-discovery/actions/workflows/verify.yml)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Code license: MIT](https://img.shields.io/badge/code-MIT-green.svg)](LICENSE)
 [![Data license: CC BY 4.0](https://img.shields.io/badge/data-CC%20BY%204.0-lightgrey.svg)](LICENSE-DATA)
+[![numpy only](https://img.shields.io/badge/core-numpy--only-orange.svg)](pyproject.toml)
+[![checks](https://img.shields.io/badge/verify-28%2F28-brightgreen.svg)](scripts/verify_results.py)
 
-*Turn a headline discovery count into a confidence interval you can defend.*
+**Turn a headline discovery count into a confidence interval you can defend.**
+
+[Quickstart](#quickstart) · [The result](#the-result) · [How it works](#how-it-works) · [Reproduce](#reproduce-the-paper) · [API](docs/API.md) · [Methods](docs/METHODS.md)
 
 </div>
 
 ---
 
-## What this is
+## Why this exists
 
 Machine-learning models now screen millions of candidate crystals and report how
 many new stable materials they found. Those counts are **model predictions
@@ -23,18 +27,42 @@ presented as measurements**: they inherit the model's unknown bias on the very s
 the model selected, and they carry no statistical guarantee.
 
 `certdisc` adapts **prediction-powered inference** to model-selected candidate
-pools. With a small, uniformly random sample of DFT verifications, it returns a
+pools. With a small, uniformly random sample of DFT verifications it returns a
 valid confidence interval for the precision of a flagged set, the count of truly
 stable materials, and the difference between two models, plus a closed-form rule
 for how large the verification budget must be.
 
+## The result
+
 Emulating certification campaigns for **15 public energy models** on the
 exhaustively labelled ~257,000-candidate WBM corpus, naive counts overstate true
-discoveries by **10% to 124%** at the exact-hull threshold. The overstatement
-shrinks with model accuracy but does not vanish: even the single most accurate
-2026 model still announces roughly **one phantom discovery in ten**. Five hundred
-verifications certify discovery rates to within **2.6–4.5 percentage points** at
-nominal 95% coverage.
+discoveries by **10% to 124%**. The overstatement shrinks with accuracy but never
+disappears: even the most accurate 2026 model still announces roughly **one
+phantom discovery in ten**.
+
+<div align="center">
+<img src="docs/assets/overstatement.png" alt="Overstatement vs model accuracy" width="82%"/>
+</div>
+
+| | Overstatement (τ=0) | 500-label certified half-width | Empirical coverage |
+|---|:---:|:---:|:---:|
+| **Frontier models** (10) | 10–21% (mean 14%) | 2.6–3.2 pp | within nominal |
+| **Earlier graph nets** (5) | 94–124% | 4.1–4.5 pp | within nominal |
+| **All 90 configs** | — | — | 0.924–0.967 (median 0.945) |
+
+Five hundred verifications — under 6% of the pool — certify discovery rates to
+within **2.6–4.5 percentage points** at nominal 95% coverage.
+
+## How it works
+
+<div align="center">
+<img src="docs/assets/method.png" alt="Certification pipeline" width="92%"/>
+</div>
+
+All inference is **conditional on the screened pool** `S`, and labels must be
+sampled uniformly at random *from* `S`. At `λ = 0` the estimator reduces to the
+classical label-only interval; with an informative model it is never wider. See
+[`docs/METHODS.md`](docs/METHODS.md) for the full statement and assumptions.
 
 ## Install
 
@@ -45,8 +73,7 @@ pip install -e .                 # core estimators, numpy only
 pip install -e ".[analysis]"     # + pandas/matplotlib/matbench-discovery to reproduce the paper
 ```
 
-The core library depends on **numpy alone**. `matbench-discovery`, `pandas`, and
-`matplotlib` are needed only to reproduce the full study.
+The core library depends on **numpy alone**.
 
 ## Quickstart
 
@@ -78,34 +105,52 @@ rect_var = float(np.var(y_true[idx] - f_pred[idx], ddof=1))
 print("budget for +/-2%:", required_budget(rect_var=rect_var, pool_size=N, half_width=0.02))
 ```
 
-Every interval is an `Interval` object with `.lower`, `.upper`, `.estimate`, and
-`.width`. See [`notebooks/analysis.ipynb`](notebooks/analysis.ipynb) for the full
-study and [`docs/API.md`](docs/API.md) for every function.
+```text
+naive announced count : 62,153
+certified 95% interval: [30,856, 36,270]  (point 33,563)
+budget for +/-2%: 2302
+```
+
+Every interval is an `Interval` with `.lower`, `.upper`, `.estimate`, `.width`.
+Full study in [`notebooks/analysis.ipynb`](notebooks/analysis.ipynb); every
+function in [`docs/API.md`](docs/API.md).
 
 ## Reproduce the paper
 
-Every number in the manuscript is recomputed from the released result files by an
-independent script:
+Every number is recomputed from the released result files by an independent
+script, and every figure regenerates from the same data:
 
 ```bash
-python scripts/verify_results.py        # reconciles all headline numbers; prints PASS/FAIL
-python scripts/build_figures.py         # regenerates Figures 2 and 3 (vector PDF + 600 dpi PNG)
+python scripts/verify_results.py        # reconciles all headline numbers -> 28/28 PASS
+python scripts/build_figures.py         # regenerates the paper figures (vector PDF + 600 dpi PNG)
 ```
 
-`verify_results.py` recomputes counts, intervals, coverage, budget predictions,
-and the paired-comparison outcomes from the CSVs in [`data/`](data/) and asserts
-they match the paper (**28 checks, all pass**). The full run of record used
-notebook build `2026-07-03-optionB-colfix-r6`, `N_REP = 1000` Monte Carlo
-replicates, `N_LABEL = 500`, base seed `0`, thresholds τ ∈ {0, 0.05, 0.10} eV/atom,
-and both the full and unique-prototype pools; every file in `data/` carries an
-SHA-256 checksum in [`data/run_metadata.json`](data/run_metadata.json).
+<details>
+<summary><b>What the validation looks like</b> (click to expand)</summary>
 
-To regenerate the results themselves (downloads ~200 MB of public WBM/leaderboard
-data on first run):
+<br/>
 
-```bash
-jupyter nbconvert --to notebook --execute notebooks/analysis.ipynb
-```
+The estimators are calibrated, efficient, and follow the predicted efficiency law
+on a synthetic positive control, then land on the same law for all 15 real
+campaigns:
+
+<div align="center">
+<img src="docs/assets/fig_validation.png" alt="Validation on a synthetic positive control" width="90%"/>
+</div>
+
+Sharper models are cheaper to certify; the closed-form budget rule predicts the
+requirement; coverage holds across all 90 configurations:
+
+<div align="center">
+<img src="docs/assets/fig_budget.png" alt="Budgets and calibration on the WBM pool" width="92%"/>
+</div>
+
+</details>
+
+The run of record: notebook build `2026-07-03-optionB-colfix-r6`, `N_REP = 1000`,
+`N_LABEL = 500`, base seed `0`, τ ∈ {0, 0.05, 0.10} eV/atom, full and
+unique-prototype pools; every file in [`data/`](data/) carries an SHA-256 checksum
+in [`data/run_metadata.json`](data/run_metadata.json).
 
 ## Repository layout
 
@@ -116,45 +161,32 @@ certified-discovery/
 │   └── core.py           #   PPI/PPI++, counts, paired diffs, budget rule, stratified PPI
 ├── scripts/
 │   ├── verify_results.py #   independent re-derivation of every headline number (28/28)
-│   └── build_figures.py  #   regenerates Figures 2 & 3 from data/
-├── notebooks/
-│   └── analysis.ipynb    #   the full study, end to end
+│   └── build_figures.py  #   regenerates the figures from data/
+├── notebooks/analysis.ipynb   # the full study, end to end
 ├── data/                 # per-figure / per-table source data + SHA-256 manifest
-├── tests/                # unit tests + smoke test (run with pytest)
-└── docs/                 # API reference and methods notes
+├── tests/                # unit tests + smoke test (pytest)
+└── docs/                 # API reference, methods notes, and figure assets
 ```
 
-The manuscript itself is not distributed in this repository. It is available from
-Nature Computational Science on publication (and the preprint from arXiv); the
-figures are regenerated from `data/` by `scripts/build_figures.py`.
-
-## Data and methods, in one paragraph
-
-Labels are DFT-verified binary stability indicators (energy above the convex hull
-≤ τ). Predictions are a model's binary stability calls on the same pool. All
-inference is **conditional on the screened pool** S, and labels must be sampled
-uniformly at random (or stratified-randomly) *from* S — sampling elsewhere and
-reusing labels inside S is invalid and is deliberately unsupported. Because
-screening pools are finite and exhaustively enumerable, the finite-population
-correction is applied explicitly. See [`docs/METHODS.md`](docs/METHODS.md).
+The manuscript itself is not distributed here; it is available from Nature
+Computational Science on publication (preprint on arXiv).
 
 ## Citing
 
-If you use this software or the certified-discovery protocol, please cite the
-paper and the software (see [`CITATION.cff`](CITATION.cff)). A `BibTeX` entry will
-be added on publication; the archived release will carry a Zenodo DOI.
+Please cite the paper and the software (see [`CITATION.cff`](CITATION.cff)). A
+`BibTeX` entry will be added on publication; the archived release will carry a
+Zenodo DOI.
 
 ## License
 
-Code is released under the [MIT License](LICENSE). The data files in `data/` are
-released under [CC BY 4.0](LICENSE-DATA). The underlying WBM corpus and Matbench
-Discovery prediction files are the property of their respective authors and are
-redistributed here only as derived per-figure source data; see their original
-licenses.
+Code under the [MIT License](LICENSE); the data files in `data/` under
+[CC BY 4.0](LICENSE-DATA). The underlying WBM corpus and Matbench Discovery
+prediction files remain the property of their respective authors; please cite them
+when using this data.
 
 ## A note on scope
 
 Certification is relative to the DFT oracle used to define stability, not to
-experimental synthesizability. The estimators are domain-generic, but the
-empirical magnitudes reported here are specific to inorganic-crystal stability on
-the WBM corpus. The library computes; it never asserts a fabricated outcome.
+experimental synthesizability. The estimators are domain-generic; the empirical
+magnitudes here are specific to inorganic-crystal stability on the WBM corpus. The
+library computes; it never asserts a fabricated outcome.
