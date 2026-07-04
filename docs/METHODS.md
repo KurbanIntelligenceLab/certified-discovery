@@ -1,8 +1,8 @@
 # Methods note
 
 A compact statement of what `certdisc` computes and the assumptions it relies on.
-The manuscript (`paper/manuscript.pdf`) and its Supplementary Information contain
-the full theory, proofs, and derivations.
+The manuscript and its Supplementary Information (available from the journal on
+publication) contain the full theory, proofs, and derivations.
 
 ## Setup
 

@@ -120,10 +120,13 @@ certified-discovery/
 ├── notebooks/
 │   └── analysis.ipynb    #   the full study, end to end
 ├── data/                 # per-figure / per-table source data + SHA-256 manifest
-├── paper/                # built manuscript.pdf, supplementary.pdf, figure PNGs
 ├── tests/                # unit tests + smoke test (run with pytest)
 └── docs/                 # API reference and methods notes
 ```
+
+The manuscript itself is not distributed in this repository. It is available from
+Nature Computational Science on publication (and the preprint from arXiv); the
+figures are regenerated from `data/` by `scripts/build_figures.py`.
 
 ## Data and methods, in one paragraph
 
