@@ -170,8 +170,6 @@ certified-discovery/
 └── docs/                 # API reference, methods notes, and figure assets
 ```
 
-The manuscript itself is not distributed here; it is available from Nature
-Computational Science on publication (preprint on arXiv).
 
 ## Citing
 
