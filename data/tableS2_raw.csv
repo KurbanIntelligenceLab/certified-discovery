@@ -1,0 +1,7 @@
+scheme,model,n,pilot,n_rep,width_ratio
+confidence tertiles,CGCNN,500,100,200,0.9944073041263288
+confidence tertiles,EquiformerV3+DeNS-OAM,500,100,200,0.9935581276471646
+confidence tertiles,GRACE-2L-OAM,500,100,200,0.9197289443843107
+composition arity,CGCNN,500,100,200,0.9945533485951932
+composition arity,EquiformerV3+DeNS-OAM,500,100,200,1.0062111992390546
+composition arity,GRACE-2L-OAM,500,100,200,1.0614316680122093

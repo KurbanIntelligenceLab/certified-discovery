@@ -1,0 +1,17 @@
+# Environment for the certified-discovery analysis notebook.
+#   pip install -r requirements.txt
+#
+# matbench-discovery supplies the WBM summary (DFT E_hull labels) and every
+# leaderboard model's prediction file; its data downloads (~200 MB, cached in
+# ~/.cache/matbench-discovery) happen automatically on first import and
+# require internet. If the notebook reports that current-leaderboard models
+# (e.g. PET-OAM-XL, eSEN-30M-OAM, UMA) are missing from your installed
+# version, upgrade it -- newer model prediction files ship with newer
+# releases -- or install from the GitHub main branch:
+#   pip install -U git+https://github.com/janosh/matbench-discovery
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+jupyter
+nbclient
+matbench-discovery>=1.3

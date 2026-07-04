@@ -1,0 +1,5 @@
+variant,model,pool_N,n_rep,mean_width,coverage
+margins tau-0.01,EquiformerV3+DeNS-OAM,32876,200,0.04485368900113161,0.92
+margins tau+0.00,EquiformerV3+DeNS-OAM,43437,200,0.04881411183714681,0.945
+margins tau+0.01,EquiformerV3+DeNS-OAM,59130,200,0.04249369573045091,0.9
+binary calls tau+0.00,EquiformerV3+DeNS-OAM,43437,200,0.05102216874791926,0.945

@@ -1,0 +1,72 @@
+{
+  "QUICK_MODE": false,
+  "N_REP": 1000,
+  "N_LABEL": 500,
+  "BUDGETS": [
+    50,
+    100,
+    200,
+    400,
+    800,
+    1600,
+    3200
+  ],
+  "TAUS": [
+    0.0,
+    0.05,
+    0.1
+  ],
+  "POOLS": [
+    "full",
+    "uniq_protos"
+  ],
+  "BASE_SEED": 0,
+  "MARGIN_SCALE": 0.05,
+  "SEED_ROBUST": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "RANK_BUDGET2": 2000,
+  "mbd_version": "1.3.1",
+  "notebook_rev": "2026-07-03-optionB-colfix-r6",
+  "models": [
+    "EquiformerV3+DeNS-OAM",
+    "eSEN-30M-OAM",
+    "PET-OAM-XL",
+    "GRACE-2L-OAM",
+    "ORB v3",
+    "SevenNet-MF-ompa",
+    "MACE-MPA-0",
+    "MatRIS-10M-OAM",
+    "DPA3-v1-OpenLAM",
+    "MatterSim v1 5M",
+    "CHGNet",
+    "M3GNet",
+    "ALIGNN",
+    "MEGNet",
+    "CGCNN"
+  ],
+  "load_path": "matbench-discovery package",
+  "python": "3.11.15",
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "timestamp": "2026-07-04T00:58:43",
+  "numpy": "2.4.6",
+  "pandas": "3.0.3",
+  "file_sha256": {
+    "table1_raw.csv": "31e441d467e9f2d14dc5cd99dca017ba436ac9e0b633d401a6e3fcb88f4aba62",
+    "table2_raw.csv": "bc908f2177bb4897f6ce3027f42451a2a59c336f49b3967f8494460e0eaf39cf",
+    "tableS2_raw.csv": "7e9bf07941ba137ca6efddc1ef5e41e9d6ac933cdac944ba3f5cafa9f32c78bd",
+    "fig2_synthetic_validation.png": "25da5359151f7d1046b5b5836e3ade7cfc68ead1bb8e65d18a1dc3ad02fe483d",
+    "fig2_synthetic_summary.csv": "6428c4797ceb09a747dca0f4d37a9023ac7bdbb1079322059a9596d511bc4066",
+    "fig2_budget_curve_synthetic.csv": "3cb19bb56c70cd6a2dd3880f6d22f7eba48dd499bbcc807bfef182241a8eedf0",
+    "table2_budget_sensitivity.csv": "0f5a8d7c361e5bf3ccf380f8fa6aade3c5ce18c7dccb1992ff7a04a4393776a5",
+    "e6_seed_robustness.csv": "fa4a8c34f7c9e90b7c17eb1cb9dd095c7da99c22ddd2a79c7ea7c699aa33cd42",
+    "budget_curves.csv": "867d4f5c9f65d79b2182481bb6f7614d26390b53c220ff592b22fbb9b9c170fc",
+    "budgets_summary.csv": "027d359b058e1724c8216fcede5865c19dbe441354992e6b54cfe8ff642970c6",
+    "model_mae.csv": "0debc0fb4340fc8b56670c48f67be2c64b2db37298af31f650a9b71e944eb015",
+    "e5_robustness.csv": "c770d832746899f1849bca79a3bc921f92a5d0e23660a3cb532ee695370f752a",
+    "fig3_budget_real.png": "f8e8d38689d3cb9535ba8aeb4bc092bcccd735f1674e3e69afd924a4dfc9a8f7"
+  }
+}
