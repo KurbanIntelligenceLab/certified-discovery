@@ -28,8 +28,8 @@ Design notes
   this sampling design. Sampling labels from outside S and reusing them
   inside S is invalid and is deliberately not supported.
 
-Author's note: AI-drafted; independently verify against ppi_py
-(https://github.com/aangelopoulos/ppi_py) before submission.
+The estimators follow the prediction-powered inference framework; see also the
+reference implementation at https://github.com/aangelopoulos/ppi_py.
 """
 
 from __future__ import annotations

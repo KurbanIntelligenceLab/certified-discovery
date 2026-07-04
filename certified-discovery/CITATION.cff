@@ -5,22 +5,17 @@ type: software
 authors:
   - family-names: Kurban
     given-names: Hasan
-    # affiliation: Hamad Bin Khalifa University, Doha, Qatar
-    # orcid: "https://orcid.org/____-____-____-____"   # TODO: add ORCID
+    affiliation: "Hamad Bin Khalifa University, Doha, Qatar"
   - family-names: Kurban
     given-names: Mustafa
-    # affiliation: Ankara University, Ankara, Turkey
-    # orcid: "https://orcid.org/____-____-____-____"   # TODO: add ORCID
+    affiliation: "Ankara University, Ankara, Turkey"
 repository-code: "https://github.com/hasankurban/certified-discovery"
 license: MIT
 version: 1.0.0
-date-released: "2026-07-04"   # TODO: update to the release date
+date-released: "2026-07-04"
 keywords:
   - prediction-powered inference
   - materials discovery
   - uncertainty quantification
   - machine-learning interatomic potentials
   - matbench-discovery
-# TODO: once the paper is published, add a `preferred-citation:` block of
-# type: article with the journal (Nature Computational Science), year, volume,
-# pages, and DOI so `Cite this repository` resolves to the paper.

@@ -45,7 +45,7 @@ def main(results_dir="data"):
     meta = json.load(open(f"{results_dir}/run_metadata.json"))
 
     # -------- provenance guard: refuse to reconcile pilot data --------
-    check("run_metadata: QUICK_MODE is False (paper protocol)",
+    check("run_metadata: QUICK_MODE is False (full protocol)",
           meta.get("QUICK_MODE") is False, f"QUICK_MODE={meta.get('QUICK_MODE')}")
     check("run_metadata: N_REP = 1000", meta.get("N_REP") == 1000,
           f"N_REP={meta.get('N_REP')}")
