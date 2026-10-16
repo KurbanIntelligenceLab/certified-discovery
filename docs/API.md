@@ -34,7 +34,7 @@ y_labeled    : DFT labels on the labeled subsample of S (size n).
 yhat_labeled : model predictions on that same subsample.
 yhat_pool    : model predictions on ALL of S (size N), including the
                labeled subsample (finite-pool convention).
-power_tune   : if True, uses the PPI++ tuning lambda* = cov(y, yhat)/var(yhat)
+power_tune   : if True, uses the regression-slope coefficient lambda* = cov(y, yhat)/var(yhat)
                estimated on the labeled sample (Angelopoulos et al. 2023),
                which guarantees the interval is never asymptotically wider
                than the classical one.

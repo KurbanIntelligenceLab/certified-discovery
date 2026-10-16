@@ -6,20 +6,23 @@ statistically correct and match the published method.
 
 ## Ground rules
 
-- **The code computes; it never asserts a fabricated outcome.** Any change that
-  hard-codes a result, weakens an interval's validity, or bypasses the
-  selection-aware sampling assumptions will be declined.
+- **No hard-coded results.** Any change that hard-codes a reported value, weakens an
+  interval's validity, or bypasses the selection-aware sampling assumptions will be
+  declined.
 - **Tests must pass.** `pytest` runs coverage, bias, budget-monotonicity, and
-  antisymmetry checks. New estimator behaviour needs a corresponding test.
-- **Numbers must reconcile.** `python scripts/verify_results.py` must stay green;
-  it re-derives every headline number in the paper from `results/`.
+  antisymmetry checks, and exact checks of the theorems. New estimator behavior needs a
+  corresponding test.
+- **Numbers must reconcile.** `python scripts/verify_results.py results experiments/results`
+  must keep passing; it recomputes the headline numbers and tables of the paper from the
+  result files.
 
 ## Development setup
 
 ```bash
 pip install -e ".[dev]"
 pytest -q
-python scripts/verify_results.py
+python scripts/verify_results.py results experiments/results
+python -m pyflakes src/certdisc scripts experiments
 ```
 
 ## Pull requests
@@ -29,8 +32,8 @@ python scripts/verify_results.py
    `analysis` extra.
 3. Include a test and, if the change touches a reported quantity, update the
    relevant check in `scripts/verify_results.py`.
-4. Do not commit regenerated figures or the matbench-discovery data cache; these
-   are gitignored.
+4. Do not commit the data cache or fetched inputs; they are ignored. Regenerated figures
+   belong in `figures/output/` only when the result files change.
 
 ## Reporting issues
 
