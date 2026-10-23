@@ -1,20 +1,22 @@
-"""verify_results.py -- Reconcile every quantitative claim in the manuscript
+"""verify_results.py -- Reconcile the quantitative claims of the manuscript
 "Certified discovery: statistically valid materials screening claims from a
-small DFT verification budget" against the raw result files, and smoke-test
-the certified estimator itself.
+small DFT verification budget" against the archived result files.
 
 Usage:
-    python verify_results.py [results_dir]
+    python verify_results.py [results_dir] [experiments_results_dir]
+
+results_dir (default: ./results) holds the run-of-record files (table1_raw.csv,
+table2_raw.csv, tableS2_raw.csv, budget_curves.csv, budgets_summary.csv,
+model_mae.csv, e5_robustness.csv, fig2_budget_curve_synthetic.csv,
+run_metadata.json). If experiments_results_dir is given, the checks added for
+the revised manuscript (numbers introduced or corrected in the revised text, and the
+independent re-execution files exp0_*, exp1_*, exp2_*, exp3_*, exp4_*, exp5_*)
+are run as well.
 
 The script COMPUTES; it never asserts a hard-coded outcome as if measured.
-Each check prints PASS/FAIL against the value printed in the paper. Exit
-code is nonzero if any check fails.
-
-Inputs expected in results_dir (default: ./results):
-    table1_raw.csv, table2_raw.csv, tableS2_raw.csv, budget_curves.csv,
-    budgets_summary.csv, model_mae.csv, e5_robustness.csv, run_metadata.json
-
-Requires numpy and pandas (pandas for CSV I/O only; all statistics are numpy).
+Each check prints PASS/FAIL against the value printed in the paper, and the exit
+code is nonzero if any check fails. Requires numpy and pandas (pandas for CSV
+I/O only; all statistics are numpy or the standard library).
 """
 import json
 import math
@@ -39,7 +41,6 @@ def main(results_dir="results"):
     s2 = pd.read_csv(f"{results_dir}/tableS2_raw.csv")
     if "scheme" in s2.columns:
         s2 = s2[s2.scheme == "confidence tertiles"]
-    bc = pd.read_csv(f"{results_dir}/budget_curves.csv")
     bs = pd.read_csv(f"{results_dir}/budgets_summary.csv")
     mae = pd.read_csv(f"{results_dir}/model_mae.csv").set_index("model")
     meta = json.load(open(f"{results_dir}/run_metadata.json"))
@@ -51,14 +52,8 @@ def main(results_dir="results"):
           f"N_REP={meta.get('N_REP')}")
     check("budget grid runs to 3,200", meta.get("BUDGETS", [])[-1:] == [3200],
           str(meta.get("BUDGETS")))
-    gran = 1000
-    cov_vals = t1.coverage
-    for R in (50, 100, 200):
-        if all(abs(c*R - round(c*R)) < 1e-9 for c in cov_vals) and R < gran:
-            gran = R
-    check("coverage granularity consistent with >=1000 replicates (not a pilot)",
-          gran >= 200 or not all(abs(c*500 - round(c*500)) < 1e-9 for c in cov_vals) or True,
-          f"finest consistent replicate divisor observed: {gran if gran<1000 else '>=500'}")
+    reps_ok = all(abs(c * 1000 - round(c * 1000)) < 1e-9 for c in t1.coverage)
+    check("coverage values are multiples of 1/1000 (1,000 replicates per configuration)", reps_ok)
 
     # ---------------- Abstract / headline claims ----------------
     f0 = t1[(t1.pool == "full") & (t1.tau == 0.0)]
@@ -84,10 +79,9 @@ def main(results_dir="results"):
     check("classical models overstate 94-125%",
           93 <= hc.min() and hc.max() <= 125,
           f"classical {hc.min():.1f}-{hc.max():.1f}%")
-    hw = bs.w_certified_at_500 / 2 * 100
-    check("500 labels certify to within 2.6-4.5 pp",
-          round(hw.min(), 1) == 2.6 and round(hw.max(), 1) == 4.5,
-          f"half-widths {hw.min():.2f}-{hw.max():.2f} pp")
+    hwt = (f0.ci_hi - f0.ci_lo) / (2 * f0.flagged) * 100
+    check("revised abstract: n=500 half-widths 2.5-4.3 pp (Table 1, measured)",
+          round(hwt.min(), 1) == 2.5 and round(hwt.max(), 1) == 4.3, f"{hwt.min():.2f}-{hwt.max():.2f} pp")
     band = 3 * math.sqrt(0.95 * 0.05 / meta["N_REP"])
     cov = t1.coverage
     n_below = int((cov < 0.95 - band).sum())
@@ -190,12 +184,106 @@ def main(results_dir="results"):
           round((1 - s2[s2.scheme == 'confidence tertiles'].width_ratio.min()) * 100) == 8,
           f"max gain {(1-s2.width_ratio.min())*100:.1f}%")
     hw500 = (bs.w_certified_at_500 / 2 * 100)
-    check("abstract claim: n=500 mean half-widths span 2.6-4.5 pp",
-          round(hw500.min(), 1) == 2.6 and round(hw500.max(), 1) == 4.5,
-          f"{hw500.min():.2f}-{hw500.max():.2f}")
+    print(f"  note: budgets_summary.w_certified_at_500 is linearly interpolated between n=400 and n=800 "
+          f"({hw500.min():.2f}-{hw500.max():.2f} pp); the manuscript no longer quotes it")
     t1hw = ((f0.ci_hi - f0.ci_lo) / (2 * f0.flagged) * 100)
     check("Table 1 exact n=500 half-widths within the abstract bound (<=4.5)",
           t1hw.max() <= 4.5, f"max={t1hw.max():.2f}")
 
+def revision_checks(results_dir, exp_dir):
+    """Checks added for the revised manuscript (numbers introduced or corrected in the revised text)."""
+    from math import comb
+    t1 = pd.read_csv(f"{results_dir}/table1_raw.csv"); bc = pd.read_csv(f"{results_dir}/budget_curves.csv")
+    bs = pd.read_csv(f"{results_dir}/budgets_summary.csv"); syn = pd.read_csv(f"{results_dir}/fig2_budget_curve_synthetic.csv")
+    cov = t1.coverage
+    check("coverage median 0.945 and mean 0.9445", round(cov.median(), 3) == 0.945 and round(cov.mean(), 4) == 0.9445,
+          f"{cov.median():.4f} / {cov.mean():.5f}")
+    mt = t1.groupby("tau").coverage.mean().round(4).to_dict()
+    check("per-threshold mean coverage 0.9475 / 0.9427 / 0.9435 (0.7 pp below nominal at tau>=0.05)",
+          [mt[0.0], mt[0.05], mt[0.1]] == [0.9475, 0.9427, 0.9435], str(mt))
+    k, n = int(round((cov * 1000).sum())), 90 * 1000
+    z = (k / n - 0.95) / math.sqrt(0.95 * 0.05 / n)
+    p = math.erfc(abs(z) / math.sqrt(2))
+    check("pooled binomial test of nominal coverage: p < 1e-12 (normal approximation)", p < 1e-12, f"z={z:.2f}, p={p:.1e}")
+    check("SI Table 1: classical coverage range in budget sweep 0.860-0.976",
+          (round(bc.coverage_classical.min(), 3), round(bc.coverage_classical.max(), 3)) == (0.86, 0.976))
+    check("SI Table 1: certified coverage range in budget sweep 0.916-0.988",
+          (round(bc.coverage_certified.min(), 3), round(bc.coverage_certified.max(), 3)) == (0.916, 0.988))
+    dev = (bs.ratio_n400 - np.sqrt(1 - bs.rho_pool ** 2)).abs().max()
+    check("Fig 2d: real campaigns within 0.002 of sqrt(1-rho^2)", dev < 0.002, f"max dev {dev:.4f}")
+    red = (1 - bs.ratio_n400) * 100
+    check("real-data width reduction 0.4%-9.8%, rho 0.07-0.43",
+          round(red.min(), 1) == 0.4 and round(red.max(), 1) == 9.8 and round(bs.rho_pool.min(), 2) == 0.07
+          and round(bs.rho_pool.max(), 2) == 0.43, f"{red.min():.2f}-{red.max():.2f}%")
+    check("synthetic width reduction 6.5%-8.1% across budgets",
+          round(syn.width_reduction.min() * 100, 1) == 6.5 and round(syn.width_reduction.max() * 100, 1) == 8.1)
+    ob = pd.read_csv(f"{exp_dir}/exp1_oracle_budgets.csv")
+    check("oracle budgets: +-5pp 123-377, +-2pp 754-2271, +-1pp 2861-8071",
+          (ob.n_pm5pp.min(), ob.n_pm5pp.max(), ob.n_pm2pp.min(), ob.n_pm2pp.max(), ob.n_pm1pp.min(), ob.n_pm1pp.max())
+          == (123, 377, 754, 2271, 2861, 8071))
+    check("oracle half-width at n=500 2.46-4.33 pp; labels saved at +-2pp 12-415",
+          (round(ob.hw500_certified_pp.min(), 2), round(ob.hw500_certified_pp.max(), 2)) == (2.46, 4.33)
+          and ((ob.n_pm2pp_classical - ob.n_pm2pp).min(), (ob.n_pm2pp_classical - ob.n_pm2pp).max()) == (12, 415))
+    check("finite-N effect on n*(+-2pp) at most 4.2%", round((1 - ob.n_pm2pp / ob.n_pm2pp_infiniteN).max() * 100, 1) == 4.2)
+    a = pd.read_csv(f"{exp_dir}/exp2_benchmark_transfer_arity.csv"); r = pd.read_csv(f"{exp_dir}/exp2_benchmark_transfer.csv")
+    b = a[a.arity == "binary"].transfer_error_pp
+    check("transfer: binaries overestimated by 9.4-12.5 pp; 9/15 beyond half-width; rounds max 5.9 pp",
+          round(b.min(), 1) == 9.4 and round(b.max(), 1) == 12.5 and int(a.exceeds_halfwidth.sum()) == 9
+          and round(r.transfer_error_pp.abs().max(), 1) == 5.9)
+    sh = pd.read_csv(f"{exp_dir}/exp4_shared_budget.csv").set_index(["design", "total_labels", "pair"])
+    order = ["CHGNet vs M3GNet", "M3GNet vs ALIGNN", "ALIGNN vs MEGNet", "MEGNet vs CGCNN"]
+    s2 = [round(sh.loc[("shared", 2000, q)].holm_power * 100) for q in order]
+    pp = [round(sh.loc[("perpair", 2000, q)].holm_power * 100) for q in order]
+    check("shared 2,000: 84/100/99/14%; per-pair 4x500: 34/98/68/5%", s2 == [84, 100, 99, 14] and pp == [34, 98, 68, 5], f"{s2} {pp}")
+    s5 = [sh.loc[("shared", 500, q)].holm_power for q in order]; sp5 = [sh.loc[("split", 500, q)].holm_power for q in order]
+    covr = pd.read_csv(f"{exp_dir}/exp4_shared_budget.csv").coverage
+    check("shared 500 beats split 500 for every pair; coverage 0.936-0.965",
+          all(x > y for x, y in zip(s5, sp5)) and (round(covr.min(), 3), round(covr.max(), 3)) == (0.936, 0.965))
+    c = pd.read_csv(f"{exp_dir}/exp3_cost_proxy.csv")
+    l, cu = c[c.proxy == "n_sites^1"], c[c.proxy == "n_sites^3"]
+    check("cost proxy: linear within +-4%; cubic 95% range ~0.7-2.8x",
+          l.q025.min() >= 0.96 and l.q975.max() <= 1.04 and round(cu.q025.min(), 1) == 0.7 and round(cu.q975.max(), 1) == 2.8)
+    e0 = pd.read_csv(f"{exp_dir}/exp0_census_reproduction.csv")
+    check("independent census reproduction (five earlier models): 30/30", bool(e0.match.all()) and len(e0) == 30)
+    e5 = pd.read_csv(f"{exp_dir}/exp5_e1_reproduction.csv"); e3 = pd.read_csv(f"{exp_dir}/exp5_e3_reproduction.csv")
+    ok1 = ((e5.coverage == e5.paper_coverage) & (e5.ci_lo == e5.paper_lo) & (e5.ci_hi == e5.paper_hi)).all()
+    check("independent re-execution: E1 30/30 and E3 8/8 identical to the run of record", bool(ok1) and bool(e3.identical.all()))
+    fr = t1[(t1.pool == "full") & (t1.tau == 0.0) & ~t1.model.isin(["CHGNet", "M3GNet", "ALIGNN", "MEGNet", "CGCNN"])]
+    def pfb(N, K, n=50):  # exact hypergeometric P(min class count < 10)
+        tot = comb(N, n); lo = sum(comb(K, j) * comb(N - K, n - j) for j in range(0, 10))
+        hi = sum(comb(K, j) * comb(N - K, n - j) for j in range(n - 9, n + 1)); return (lo + hi) / tot
+    pr = [pfb(int(r.flagged), int(r["true"])) for _, r in fr.iterrows()]
+    check("SI Note 3: fallback probability at n=50 is 0.65-0.98 (exact)", (round(min(pr), 2), round(max(pr), 2)) == (0.65, 0.98),
+          f"{min(pr):.3f}-{max(pr):.3f}")
+
+    # ---- fifteen-model re-execution (authors' machine, figshare-hosted frontier files) ----
+    import os
+    f15 = f"{exp_dir}/exp5_e1_reproduction_15models.csv"
+    if os.path.isfile(f15):
+        e1f = pd.read_csv(f15); e3f = pd.read_csv(f"{exp_dir}/exp5_e3_reproduction_15models.csv")
+        idf = ((e1f.coverage == e1f.paper_coverage) & (e1f.ci_lo == e1f.paper_lo) & (e1f.ci_hi == e1f.paper_hi)).sum()
+        check("fifteen-model re-execution: E1 90/90 configurations identical", len(e1f) == 90 and idf == 90, f"{idf}/{len(e1f)}")
+        check("fifteen-model re-execution: E3 28/28 rows identical", len(e3f) == 28 and bool(e3f.identical.all()), f"{int(e3f.identical.sum())}/{len(e3f)}")
+        shf = pd.read_csv(f"{exp_dir}/exp4_shared_budget_15models.csv")
+        pv = shf.pivot_table(index="pair", columns=["design", "total_labels"], values="holm_power")
+        better = int((pv[("shared", 2000)] > pv[("perpair", 7000)]).sum())
+        covf = shf[shf.design.isin(["shared", "perpair"])].coverage
+        check("fifteen-model shared sample: shared 2,000 beats per-pair 7,000 in 13/14 pairs; coverage 0.935-0.966",
+              better == 13 and (round(covf.min(), 3), round(covf.max(), 3)) == (0.935, 0.966), f"{better}/14, {covf.min():.3f}-{covf.max():.3f}")
+        key = {"MACE-MPA-0 vs CHGNet": (1.000, 0.893), "GRACE-2L-OAM vs MatterSim v1 5M": (0.995, 0.907), "ALIGNN vs MEGNet": (0.965, 0.470)}
+        check("fifteen-model shared sample: quoted pairs 100/89, 99.5/91, 96.5/47 percent",
+              all(round(pv[("shared", 2000)][k], 3) == a and round(pv[("perpair", 7000)][k], 3) == b for k, (a, b) in key.items()))
+        s500 = shf[(shf.design == "split") & (shf.total_labels == 500)].coverage.min()
+        check("fifteen-model split of 500 labels under-covers (min 0.74)", round(s500, 2) == 0.74, f"{s500:.3f}")
+    else:
+        print("  note: fifteen-model result files not present; frontier re-execution not checked")
+
+
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "results")
+    args = [a for a in sys.argv[1:]]
+    results_dir = args[0] if args else "results"
+    main(results_dir)
+    if len(args) > 1:
+        revision_checks(results_dir, args[1])
+    print(f"\n{len(FAILURES)} check(s) failed" if FAILURES else "\nall checks passed")
+    sys.exit(1 if FAILURES else 0)

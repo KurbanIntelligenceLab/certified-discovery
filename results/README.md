@@ -135,3 +135,17 @@ Per-figure and per-table source data. Every file also has an SHA-256 entry in
 | `pilot` | 100 |
 | `n_rep` | 200 |
 | `width_ratio` | 0.9944073041263288 |
+
+## Revision experiment results (`../experiments/results/`)
+
+| file | content |
+|---|---|
+| `exp0_census_reproduction.csv` | census counts recomputed from the public prediction files against Table 1 (five earlier models) |
+| `exp1_oracle_budgets.csv` | half-widths at n = 500 and minimal budgets for target half-widths, Corollary 1 at census values (Supplementary Table 5) |
+| `exp2_benchmark_transfer.csv`, `exp2_benchmark_transfer_arity.csv` | benchmark precision against restricted-pool precision by substitution round and by chemical arity (Supplementary Table 6) |
+| `exp3_cost_proxy.csv` | realized cost of a 500-label sample relative to its expectation under size proxies (Supplementary Table 8) |
+| `exp4_shared_budget.csv` | Holm-corrected detection rates and coverage for shared, split and per-pair designs (Supplementary Table 7) |
+| `exp5_e1_reproduction.csv`, `exp5_e3_reproduction.csv` | re-execution of the coverage campaigns and paired comparisons against the run of record (five earlier models) |
+| `exp5_e1_reproduction_15models.csv`, `exp5_e3_reproduction_15models.csv`, `exp4_shared_budget_15models.csv` | the same re-execution and the shared-sample comparison for all fifteen models (frontier files from figshare; run on Apple Silicon) |
+
+Column meanings are documented in the docstring of the script that writes each file.

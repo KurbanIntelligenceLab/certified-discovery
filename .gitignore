@@ -34,3 +34,14 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Input data fetched by experiments/fetch_data.sh (not tracked); the ten frontier
+# prediction files under data/frontier/ ARE tracked so that the 15-model re-execution
+# can run from a clone.
+/data/*.csv.gz
+/mbd_cache/
+/notebooks/results/
+/experiments/results/*.log
+/results/*.png
+/results/paper_results.zip
+/results_rerun/

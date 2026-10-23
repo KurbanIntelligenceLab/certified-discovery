@@ -1,0 +1,6 @@
+Environment that rendered the figures in this directory (python figures/build_figures.py results):
+python 3.12.3 (Linux x86_64)
+matplotlib 3.10.8
+numpy 2.4.4
+pandas 3.0.2
+Other matplotlib versions reproduce the same figures with sub-pixel differences in text layout.

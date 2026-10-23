@@ -114,7 +114,7 @@ def build_method(path=f"{ASSETS}/method.png"):
         ax.annotate("", xy=(xs[i + 1] - 0.05, y + h / 2), xytext=(xs[i] + w + 0.05, y + h / 2),
                     arrowprops=dict(arrowstyle="-|>", color=GREY, lw=1.8), zorder=2)
     ax.text(0.15, 2.58, "How certification works", fontsize=12.5, fontweight="bold", color="#1a2540")
-    ax.text(0.16, 2.28, "labels sampled uniformly from the screened pool   .   interval never wider than label-only   .   numpy-only",
+    ax.text(0.16, 2.28, "labels sampled uniformly from the screened pool   .   interval never asymptotically wider than label-only   .   numpy-only",
             fontsize=7.6, color=GREY)
     ax.text(5.0, 0.44, r"$\hat\pi = \lambda\,\bar f \;+\; \dfrac{1}{n}\sum_{i\in\mathcal{L}}(y_i-\lambda f_i)$",
             fontsize=13, ha="center", color=OKB)
@@ -145,7 +145,7 @@ def build_overstatement(path=f"{ASSETS}/overstatement.png"):
         ax.scatter(mae.loc[m, "mae_eV_per_atom"], f0.loc[m, "overstate_pct"], s=46, color=OKV, edgecolor="white", lw=0.7, zorder=3)
     best = "EquiformerV3+DeNS-OAM"
     phantom = int(f0.loc[best, "flagged"] - f0.loc[best, "true"])
-    ax.annotate(f"EquiformerV3+DeNS-OAM\nmost accurate 2026 model\nstill {f0.loc[best,'overstate_pct']:.1f}% ({phantom:,} phantom)",
+    ax.annotate(f"EquiformerV3+DeNS-OAM\nmost accurate 2026 model\nstill {f0.loc[best,'overstate_pct']:.1f}% ({phantom:,} false discoveries)",
                 xy=(mae.loc[best, "mae_eV_per_atom"], f0.loc[best, "overstate_pct"]),
                 xytext=(0.036, 33), fontsize=7.0, color=OKB,
                 arrowprops=dict(arrowstyle="->", color=OKB, lw=0.8, connectionstyle="arc3,rad=-0.2"))

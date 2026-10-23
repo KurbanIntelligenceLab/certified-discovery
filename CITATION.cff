@@ -11,10 +11,10 @@ authors:
     given-names: Mustafa
     affiliation: "Ankara University, Ankara, Turkey"
     orcid: "https://orcid.org/0000-0002-7263-0234"
-repository-code: "https://github.com/hasankurban/certified-discovery"
+repository-code: "https://github.com/KurbanIntelligenceLab/certified-discovery"
 license: MIT
-version: 1.0.0
-date-released: "2026-07-04"
+version: 1.1.1
+date-released: "2026-10-14"
 keywords:
   - prediction-powered inference
   - materials discovery

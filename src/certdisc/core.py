@@ -1,6 +1,6 @@
 """
-ppi_matdisc.py
-==============
+certdisc.core
+=============
 Prediction-powered inference (PPI) for AI-driven materials discovery.
 
 Implements the paper's core quantities:
@@ -28,8 +28,11 @@ Design notes
   this sampling design. Sampling labels from outside S and reusing them
   inside S is invalid and is deliberately not supported.
 
-The estimators follow the prediction-powered inference framework; see also the
-reference implementation at https://github.com/aangelopoulos/ppi_py.
+Cross-check: at fixed lambda the point estimate coincides with the reference
+implementation ppi_py 0.2.3 (ppi_mean_pointestimate with the whole pool passed as the
+unlabeled set); see experiments/verification/ppi_py_crosscheck.py. The tuned
+coefficient is the finite-population regression slope Cov/Var, whereas the PPI++
+default is Cov/((1 + n/N_u) Var) for a separate unlabeled sample of size N_u.
 """
 
 from __future__ import annotations

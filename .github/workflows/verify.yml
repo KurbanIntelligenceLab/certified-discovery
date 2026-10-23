@@ -28,8 +28,13 @@ jobs:
           pip install -e ".[dev]"
           pip install pandas   # verify_results.py reads the CSVs with pandas
 
-      - name: Reconcile every headline number against the source data
-        run: python scripts/verify_results.py
+      - name: Reconcile the headline numbers and tables against the source data
+        run: python scripts/verify_results.py results experiments/results
+
+      - name: Static analysis
+        run: |
+          pip install pyflakes
+          python -m pyflakes src/certdisc scripts experiments
 
       - name: Run unit and smoke tests
         run: pytest -q
