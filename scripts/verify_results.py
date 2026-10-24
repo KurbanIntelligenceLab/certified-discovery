@@ -124,7 +124,7 @@ def main(results_dir="results"):
             print("  Table 1 mismatch:", m)
     check("Table 1: all 15 rows match table1_raw.csv", ok)
     best = idx.loc["EquiformerV3+DeNS-OAM"]
-    check("EquiformerV3 phantom count 4,073",
+    check("EquiformerV3 false-discovery count 4,073",
           best.flagged - best["true"] == 4073,
           f"{int(best.flagged - best['true'])}")
     weakest = [m for m in paper_t1 if idx.loc[m, "flagged"] - idx.loc[m, "true"] > idx.loc[m, "true"]]

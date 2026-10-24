@@ -144,8 +144,8 @@ def build_overstatement(path=f"{ASSETS}/overstatement.png"):
     for m in CL:
         ax.scatter(mae.loc[m, "mae_eV_per_atom"], f0.loc[m, "overstate_pct"], s=46, color=OKV, edgecolor="white", lw=0.7, zorder=3)
     best = "EquiformerV3+DeNS-OAM"
-    phantom = int(f0.loc[best, "flagged"] - f0.loc[best, "true"])
-    ax.annotate(f"EquiformerV3+DeNS-OAM\nmost accurate 2026 model\nstill {f0.loc[best,'overstate_pct']:.1f}% ({phantom:,} false discoveries)",
+    false_discoveries = int(f0.loc[best, "flagged"] - f0.loc[best, "true"])
+    ax.annotate(f"EquiformerV3+DeNS-OAM\nmost accurate 2026 model\nstill {f0.loc[best,'overstate_pct']:.1f}% ({false_discoveries:,} false discoveries)",
                 xy=(mae.loc[best, "mae_eV_per_atom"], f0.loc[best, "overstate_pct"]),
                 xytext=(0.036, 33), fontsize=7.0, color=OKB,
                 arrowprops=dict(arrowstyle="->", color=OKB, lw=0.8, connectionstyle="arc3,rad=-0.2"))
